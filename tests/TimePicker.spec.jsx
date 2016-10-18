@@ -37,6 +37,20 @@ describe('TimePicker', () => {
       />, container);
   }
 
+  function renderPickerWithMinuteStep(props) {
+    const showSecond = false;
+    const format = ('HH:mm');
+
+    return ReactDOM.render(
+      <TimePicker
+        format={format}
+        showSecond={showSecond}
+        defaultValue={moment('08:25', format)}
+        minuteStep={5}
+        {...props}
+      />, container);
+  }
+
   beforeEach(() => {
     container = document.createElement('div');
     document.body.appendChild(container);
@@ -141,6 +155,38 @@ describe('TimePicker', () => {
         expect(change.minute()).to.be(24);
         expect((input).value).to.be('01:24');
         expect(picker.state.open).to.be.ok();
+        next();
+      }], () => {
+        done();
+      });
+    });
+  });
+
+  describe('render panel to body (with minute step)', () => {
+    it('popup correctly', (done) => {
+      let change;
+      const picker = renderPickerWithMinuteStep({
+        onChange(v) {
+          change = v;
+        },
+      });
+      expect(picker.state.open).not.to.be.ok();
+      const input = TestUtils.scryRenderedDOMComponentsWithClass(picker,
+          'rc-time-picker-input')[0];
+      expect((input).value).to.be('08:25');
+      async.series([(next) => {
+        Simulate.click(input);
+        setTimeout(next, 100);
+      }, (next) => {
+        const selector = TestUtils.scryRenderedDOMComponentsWithClass(picker.panelInstance,
+            'rc-time-picker-panel-select')[1];
+        const option = selector.getElementsByTagName('li')[2];
+        Simulate.click(option);
+        setTimeout(next, 100);
+      }, (next) => {
+        expect(change).to.be.ok();
+        expect(change.minute()).to.be(10);
+
         next();
       }], () => {
         done();

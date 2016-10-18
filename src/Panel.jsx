@@ -7,9 +7,9 @@ import classNames from 'classnames';
 function noop() {
 }
 
-function generateOptions(length, disabledOptions, hideDisabledOptions) {
+function generateOptions(length, disabledOptions, hideDisabledOptions, step) {
   const arr = [];
-  for (let value = 0; value < length; value++) {
+  for (let value = 0; value < length; value += step) {
     if (!disabledOptions || disabledOptions.indexOf(value) < 0 || !hideDisabledOptions) {
       arr.push(value);
     }
@@ -36,6 +36,9 @@ const Panel = React.createClass({
     showHour: PropTypes.bool,
     showSecond: PropTypes.bool,
     onClear: PropTypes.func,
+    hourStep: PropTypes.number,
+    minuteStep: PropTypes.number,
+    secondStep: PropTypes.number,
   },
 
   getDefaultProps() {
@@ -84,6 +87,7 @@ const Panel = React.createClass({
       prefixCls, className, placeholder, disabledHours, disabledMinutes,
       disabledSeconds, hideDisabledOptions, allowEmpty, showHour, showSecond,
       format, defaultOpenValue, clearText, onEsc,
+      hourStep, minuteStep, secondStep,
     } = this.props;
     const {
       value, currentSelectPanel,
@@ -92,9 +96,12 @@ const Panel = React.createClass({
     const disabledMinuteOptions = disabledMinutes(value ? value.hour() : null);
     const disabledSecondOptions = disabledSeconds(value ? value.hour() : null,
       value ? value.minute() : null);
-    const hourOptions = generateOptions(24, disabledHourOptions, hideDisabledOptions);
-    const minuteOptions = generateOptions(60, disabledMinuteOptions, hideDisabledOptions);
-    const secondOptions = generateOptions(60, disabledSecondOptions, hideDisabledOptions);
+    const hourOptions = generateOptions(24, disabledHourOptions, hideDisabledOptions,
+      hourStep);
+    const minuteOptions = generateOptions(60, disabledMinuteOptions, hideDisabledOptions,
+      minuteStep);
+    const secondOptions = generateOptions(60, disabledSecondOptions, hideDisabledOptions,
+      secondStep);
 
     return (
       <div className={classNames({ [`${prefixCls}-inner`]: true, [className]: !!className })}>

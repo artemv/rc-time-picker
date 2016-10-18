@@ -24,6 +24,7 @@ ReactDom.render(
     defaultValue={moment()}
     className="xxx"
     onChange={onChange}
+    minuteStep={5}
   />,
   document.getElementById('__react-content')
 );
