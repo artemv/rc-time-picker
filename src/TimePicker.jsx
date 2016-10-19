@@ -42,6 +42,7 @@ const Picker = React.createClass({
     hourStep: PropTypes.number,
     minuteStep: PropTypes.number,
     secondStep: PropTypes.number,
+    addon: PropTypes.func,
   },
 
   getDefaultProps() {
@@ -67,6 +68,7 @@ const Picker = React.createClass({
       hourStep: 1,
       minuteStep: 1,
       secondStep: 1,
+      addon: noop,
     };
   },
 
@@ -143,7 +145,7 @@ const Picker = React.createClass({
       prefixCls, placeholder, disabledHours,
       disabledMinutes, disabledSeconds, hideDisabledOptions,
       allowEmpty, showHour, showSecond, defaultOpenValue, clearText,
-      hourStep, minuteStep, secondStep,
+      hourStep, minuteStep, secondStep, addon,
     } = this.props;
     return (
       <Panel
@@ -167,6 +169,7 @@ const Picker = React.createClass({
         hourStep={hourStep}
         minuteStep={minuteStep}
         secondStep={secondStep}
+        addon={addon}
       />
     );
   },
